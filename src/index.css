@@ -62,14 +62,15 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: light) {
+@import "tailwindcss";
+
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color-scheme: light dark;
   }
-  a:hover {
-    color: #747bff;
+  html, body, #root {
+    height: 100%;
   }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
 }
