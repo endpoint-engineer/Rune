@@ -32,9 +32,8 @@ import { AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { formatDistanceToNow } from 'date-fns';
+import './index.css'
 
-
-//------FIREBASE-CONFIG----------
 // -----------------------------
 // CONFIG: Expect global variables
 // window.__firebase_config must exist as the firebase config object.
@@ -105,9 +104,9 @@ function AuthProvider({ children }) {
   );
 }
 
-function useAuth() {
-  return useContext(AuthContext);
-}
+// To access auth context inside components:
+// const { user, login, logout, loading } = useContext(AuthContext);
+
 
 // -----------------------------
 // Helper utilities
@@ -176,7 +175,7 @@ export default function App() {
   const [view, setView] = useState({ page: 'home', params: {} });
   const [posts, setPosts] = useState([]);
   const [allUsers, setAllUsers] = useState({});
-  const { user, loading } = useAuthWrapper();
+  const { user, loading: _loading } = useAuthWrapper();
   const [search, setSearch] = useState('');
 
   // Subscribe to posts collection
@@ -320,7 +319,7 @@ function PostCard({ post, onOpen }) {
 // -----------------------------
 // Post Detail Page
 // -----------------------------
-function PostDetailPage({ postId, user, setView }) {
+function PostDetailPage({ postId, user }) {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
