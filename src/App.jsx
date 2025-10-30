@@ -40,10 +40,22 @@ import './index.css'
 // window.__app_id and window.__initial_auth_token are available but not required.
 // -----------------------------
 
-const firebaseConfig = typeof window !== 'undefined' && window.__firebase_config ? window.__firebase_config : null;
-if (!firebaseConfig) {
-  console.warn('No __firebase_config found on window. Make sure you set window.__firebase_config in index.html');
+// Prefer Vite build-time env vars, fall back to runtime window.__firebase_config if present
+const firebaseConfig = {
+  apiKey: import.meta?.env?.VITE_FIREBASE_API_KEY || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.apiKey) || '',
+  authDomain: import.meta?.env?.VITE_FIREBASE_AUTH_DOMAIN || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.authDomain) || '',
+  projectId: import.meta?.env?.VITE_FIREBASE_PROJECT_ID || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.projectId) || '',
+  storageBucket: import.meta?.env?.VITE_FIREBASE_STORAGE_BUCKET || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.storageBucket) || '',
+  messagingSenderId: import.meta?.env?.VITE_FIREBASE_MESSAGING_SENDER_ID || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.messagingSenderId) || '',
+  appId: import.meta?.env?.VITE_FIREBASE_APP_ID || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.appId) || '',
+  measurementId: import.meta?.env?.VITE_FIREBASE_MEASUREMENT_ID || (typeof window !== 'undefined' && window.__firebase_config && window.__firebase_config.measurementId) || '',
+};
+
+// Basic sanity check so initialization fails loudly in console if keys are missing
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  console.warn('Firebase config missing. Check VITE_FIREBASE_* env vars or window.__firebase_config');
 }
+
 
 const app = initializeApp(firebaseConfig || {});
 const auth = getAuth(app);
